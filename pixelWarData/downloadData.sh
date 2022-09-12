@@ -1,4 +1,5 @@
-for i in {0..78}
+#for i in {0..78}
+for i in { 26 36 72 }
 do
    echo "File $i over 78"
    #if test $i -gt 9
