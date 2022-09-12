@@ -12,3 +12,5 @@ artifacts
 # zipped files containing historic of all pixels transactions
 pixelWarData/data
 
+*.DS_Store
+
