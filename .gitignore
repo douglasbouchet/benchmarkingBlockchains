@@ -10,7 +10,7 @@ cache
 artifacts
 
 # zipped files containing historic of all pixels transactions
-pixelWarData/data
+#pixelWarData/data
 
 *.DS_Store
 
