@@ -9,3 +9,6 @@ typechain-types
 cache
 artifacts
 
+# zipped files containing historic of all pixels transactions
+pixelWarData/data
+
