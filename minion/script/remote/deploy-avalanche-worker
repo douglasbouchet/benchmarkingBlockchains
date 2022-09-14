@@ -1,0 +1,109 @@
+#!/bin/bash
+
+set -e
+
+script_name='deploy-avalanche-worker'
+install_root="${HOME}/install/avalanche"
+deploy_root="${HOME}/deploy/avalanche"
+
+
+# Utility functions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+fatal() {
+    local msg="$1" ; shift
+
+    exec >&2
+
+    echo "${script_name}: ${msg}"
+    echo
+    echo "Usage: $0 prepare                                                (1)"
+    echo "       $0 generate <nodefile> <keyfile>                          (2)"
+    echo
+    echo "Prepare the Avalanche running directory in (1) or use the Avalanche"
+    echo "toolchain to generate a network from a list of nodes <nodefile> and"
+    echo "list of the accounts to add with an initial balance in the "
+    echo "blockchain."
+
+    exit 1
+}
+
+setup_environment() {
+    if [ ! -e "${install_root}" ] ; then
+	fatal "cannot find avalanche install at '${install_root}'"
+    fi
+
+    export PATH="${install_root}/avalanche-tools:${PATH}"
+
+    if ! command -v 'avalanche' > '/dev/null' 2> '/dev/null' ; then
+	fatal "cannot find avalanche executable in '${install_root}'"
+    fi
+}
+
+
+# Prepare action  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+prepare() {
+    if [ $# -gt 0 ] ; then
+	fatal "unexpected operand '$1'"
+    fi
+
+    if [ -e "${deploy_root}" ] ; then
+	sudo rm -rf "${deploy_root}"
+    fi
+
+    if [ ! -d "${deploy_root}" ] ; then
+	mkdir -p "${deploy_root}"
+    fi
+
+    pkill -f 'avalanchego' || true
+}
+
+
+# Generate action - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+generate() {
+    if [ $# -lt 1 ] ; then
+	fatal "missing nodefile operand"
+    elif [ $# -lt 2 ] ; then
+	fatal "missing keyfile operand"
+    elif [ $# -gt 2 ] ; then
+	fatal "unexpected operand '$3'"
+    fi
+
+    local nodefile="$1" ; shift
+    local keyfile="$1" ; shift
+    local netroot="${deploy_root}/network"
+
+    setup_environment
+
+    mkdir "${netroot}"
+
+    cd "${deploy_root}"
+
+    avalanche "${netroot}" "${HOME}/${nodefile}" "${HOME}/${keyfile}"
+
+	tar -C "${deploy_root}" -czf "${netroot}.tar.gz" 'network'
+
+    rm -rf "${netroot}"
+}
+
+
+# Main script - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+if [ $# -lt 1 ] ; then
+    fatal "missing action operand"
+fi
+
+action="$1" ; shift
+
+case "${action}" in
+    'prepare')
+	prepare "$@"
+	;;
+    'generate')
+	generate "$@"
+	;;
+    *)
+	fatal "unknown action: '${action}'"
+	;;
+esac
