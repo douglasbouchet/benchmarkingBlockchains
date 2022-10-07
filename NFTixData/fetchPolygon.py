@@ -79,8 +79,8 @@ def fetchAllDataV2():
     smartContractAddress = "0xbce1b23c7544422f1e2208d29a6a3aa9fabab250"
     totalData = []
     startBlock = 20363134
-    endBlock = 22000000
-    #endBlock = 33909989
+    #endBlock = 22000000
+    endBlock = 33909989
     currentBlock = startBlock
     nBlocks = 10000
     counter = 0  # Usefull to assign on id to each transaction
