@@ -12,5 +12,7 @@ artifacts
 # zipped files containing historic of all pixels transactions
 #pixelWarData/data
 
+NFTixData/data
+
 *.DS_Store
 
