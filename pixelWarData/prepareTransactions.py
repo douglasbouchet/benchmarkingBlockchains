@@ -1,4 +1,4 @@
-# we count the number of transactions happening each second and write this number in a yaml file which represent
+# we count the number of transactions happening each second and write this number in a yaml file which represent
 # the transactions per second we will used to benchMark the blockchains
 
 # TODO not sure of the expected form of the yaml file, see with Gauthier
@@ -15,7 +15,7 @@ import yaml
 
 
 def computeSeconds(year, month, day, hour, minute, second):
-    #print(year, month, day, hour, minute, second)
+    # print(year, month, day, hour, minute, second)
     return int(datetime(year, month, day, hour, minute, second).timestamp())
 
 
@@ -33,23 +33,22 @@ if __name__ == "__main__":
     # for fileId in range(0, 79):
     for fileId in range(1, 79):
         print("fileId: ", fileId)
-        filename = 'data/' + str(fileId) + '.csv'
-        with open(filename, 'r') as f:
+        filename = "data/" + str(fileId) + ".csv"
+        with open(filename, "r") as f:
             f.readline()  # skip the headers
             for line in f:
                 # we get the time of the transaction
-                splitted = line.split(' ')
-                day_data = splitted[0].split('-')
+                splitted = line.split(" ")
+                day_data = splitted[0].split("-")
                 year = int(day_data[0])
                 month = int(day_data[1])
                 day = int(day_data[2])
-                hour_data = splitted[1].split(':')
+                hour_data = splitted[1].split(":")
                 hour = int(hour_data[0])
                 minute = int(hour_data[1])
                 second = int(hour_data[2].split(".")[0])
                 # we compute how much second does that represent
-                currentSecond = computeSeconds(
-                    year, month, day, hour, minute, second)
+                currentSecond = computeSeconds(year, month, day, hour, minute, second)
                 # print("second: ", computeSeconds(
                 #    year, month, day, hour, minute, second))
                 addSecondToDict(secondToTxs, currentSecond)
@@ -72,9 +71,11 @@ if __name__ == "__main__":
     # print(final_dict)
     # now we can write the yaml file
 
-    dict_file = [{'id': "PixelWar"},
-                 {'contract': "pixelWar:setPixel"},
-                 {'txs': final_dict}]
+    dict_file = [
+        {"id": "PixelWar"},
+        {"contract": "pixelWar:setPixel"},
+        {"txs": final_dict},
+    ]
 
-    with open(r'res.yaml', 'w') as file:
+    with open(r"res.yaml", "w") as file:
         documents = yaml.dump(dict_file, file)
