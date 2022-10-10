@@ -11,21 +11,12 @@ for line in sys.stdin:
     proto = None
     delta = None
 
-    # Try to match a pull call.
+    # Try to match a primarySale call.
     #
-    # m = re.search("^primarySale\((\d+)\)$", line)
-
-    # match smthg of the form "primarySale(digit,digit)"
-    # m = re.search('^primarySale\((\d+(?:,\d+))\)$', line)
     # match smthg of the form "primarySale(digit, digit)"
     m = re.search("^primarySale\((\d+(,\s+\d+))\)$", line)
-    # primarySale(1111)
     if m:
-        # proto = 'primarySale(int256)'# original
         proto = "primarySale(int256,int256)"
-        # proto = "primarySale(uint32)"
-        # proto = 'primarySale(int256, int256)' # TODO do we need a space after the comma?
-        # delta = int (m.group(1)) #original
         delta0 = int(m.group(1).split(",")[0])
         delta1 = int(m.group(1).split(",")[1])
 
@@ -46,30 +37,13 @@ for line in sys.stdin:
     #   28 bytes of padding
     #    4 bytes of unsigned integer with the actual value
     #
-    # print (base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta)).decode('ascii'), flush = True) #original
-    # first = base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta0)).decode('ascii')
-    # second = base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta1)).decode('ascii')
-    # print(first[:-1] + second, flush=True)
-    # print(first + second, flush=True)
-    # print(first[:-1] + second +"=")
-    # print (base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta0)).decode(
-    #    'ascii'), base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta1)).decode(
-    #    'ascii'), flush = True)
-    # print (base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta0), struct.pack('>28sI', b'\x00' * 28, delta1)).decode(
-    #    'ascii'), flush = True)
-    # trying with hardcoded value from abi-spec,  working with primarySale(int256,int256)
-    # encoded = base64.b64encode(
-    #    b"00000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000045"
-    # )
-    # print(encoded.decode("ascii"), flush=True)
-    # trying with longed encoded value, working with primarySale(int256,int256)
-    # print(
-    #     "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE==",
-    #     flush=True,
-    # )
+    # print (base64.b64encode(struct.pack('>28sI', b'\x00' * 28, delta)).decode('ascii'), flush = True) # original
+
     # trying with given values from the input, working with primarySale(int256,int256)
+    # we parse each input into a 256 signed integer, and then we encode it in base64
     first = base64.b64encode(struct.pack(">28sI", b"\x00" * 28, delta0)).decode("ascii")
     second = base64.b64encode(struct.pack(">28sI", b"\x00" * 28, delta1)).decode(
         "ascii"
     )
+    # then we remove the "=" from first, and add one "=" at the end of second.
     print(first[:-1] + second + "=", flush=True)
