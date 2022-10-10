@@ -2,9 +2,12 @@ pragma solidity >=0.7.0;
 
 contract NFTix {
     function primarySale(int256 a, int256 b) public pure {
+        //function primarySale(int256 a) public pure {
+        //function primarySale(int32 a, int32 b) public pure {
         int256 counter = 0;
         counter += a;
         counter += b;
+        //counter += b;
     }
     // function primarySale(
     //     address _destinationAddress,
