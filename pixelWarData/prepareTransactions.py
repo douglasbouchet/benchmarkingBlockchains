@@ -10,8 +10,8 @@
 #   1:78
 #   2:45...
 
-from datetime import datetime
 import yaml
+from datetime import datetime
 
 
 def computeSeconds(year, month, day, hour, minute, second):
@@ -29,35 +29,44 @@ def addSecondToDict(d, second):
 if __name__ == "__main__":
 
     secondToTxs = {}
-    # we iterate over each of the 78 csv files:
-    # for fileId in range(0, 79):
-    for fileId in range(1, 79):
-        print("fileId: ", fileId)
-        filename = "data/" + str(fileId) + ".csv"
-        with open(filename, "r") as f:
-            f.readline()  # skip the headers
-            for line in f:
-                # we get the time of the transaction
-                splitted = line.split(" ")
-                day_data = splitted[0].split("-")
-                year = int(day_data[0])
-                month = int(day_data[1])
-                day = int(day_data[2])
-                hour_data = splitted[1].split(":")
-                hour = int(hour_data[0])
-                minute = int(hour_data[1])
-                second = int(hour_data[2].split(".")[0])
-                # we compute how much second does that represent
-                currentSecond = computeSeconds(year, month, day, hour, minute, second)
-                # print("second: ", computeSeconds(
-                #    year, month, day, hour, minute, second))
-                addSecondToDict(secondToTxs, currentSecond)
-                # if second == currentSecond:
-                #    currentSecond += 1
-                # else:
-                #    # we write the number of transactions in the yaml file
-                #    # TODO
-                #    currentSecond = second
+
+    with open("function-arguments.csv", "w") as csv_file:
+        # we iterate over each of the 78 csv files:
+        # for fileId in range(0, 79):
+        # for fileId in range(1, 79):
+        for fileId in range(1, 2):
+            print("fileId: ", fileId)
+            filename = "data/" + str(fileId) + ".csv"
+            with open(filename, "r") as f:
+                f.readline()  # skip the headers
+                for line in f:
+                    # we get the time of the transaction
+                    splitted = line.split(" ")
+                    day_data = splitted[0].split("-")
+                    year = int(day_data[0])
+                    month = int(day_data[1])
+                    day = int(day_data[2])
+                    hour_data = splitted[1].split(":")
+                    hour = int(hour_data[0])
+                    minute = int(hour_data[1])
+                    second = int(hour_data[2].split(".")[0])
+                    # we compute how much second does that represent
+                    currentSecond = computeSeconds(
+                        year, month, day, hour, minute, second
+                    )
+                    # print("second: ", computeSeconds(
+                    #    year, month, day, hour, minute, second))
+                    addSecondToDict(secondToTxs, currentSecond)
+
+                    # we also record which pixels where being placed by the user
+                    splitted = line.split(",")
+                    color = splitted[-3]
+                    coordinates = splitted[-2:]
+                    x = coordinates[0].replace('"', "")
+                    y = coordinates[1].replace('"', "").replace("\n", "")
+                    # print(int(x), int(y))
+                    # write x,y and color into a csv file
+                    csv_file.write(x + "," + y + "," + color + "\n")
 
     # print(secondToTxs)
 
