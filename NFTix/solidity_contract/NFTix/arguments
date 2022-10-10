@@ -13,7 +13,7 @@ for line in sys.stdin:
 
     # Try to match a primarySale call.
     #
-    # match smthg of the form "primarySale(digit, digit)"
+    # match string of the form "primarySale(digit, digit)"
     m = re.search("^primarySale\((\d+(,\s+\d+))\)$", line)
     if m:
         proto = "primarySale(int256,int256)"
