@@ -9,10 +9,16 @@ typechain-types
 cache
 artifacts
 
+*.DS_Store
+
 # zipped files containing historic of all pixels transactions
 #pixelWarData/data
 pixelWarData/arguments.csv
 
 NFTixData/data
 
-*.DS_Store
+
+# some generated Data
+concatenated.yaml
+test.yaml
+rescopy.yaml
