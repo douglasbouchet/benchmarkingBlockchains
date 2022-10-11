@@ -1,7 +1,8 @@
 # we count the number of transactions happening each second and write this number in a yaml file which represent
 # the transactions per second we will used to benchMark the blockchains
 
-# TODO not sure of the expected form of the yaml file, see with Gauthier
+# For the arguments, I simplified them as one unique for each transactions happening at the same second.
+# possible to make one for each txs but longer...
 
 # format
 #
@@ -9,6 +10,12 @@
 #   0:140
 #   1:78
 #   2:45...
+#
+# arguments: (second, x, y, color)
+#
+#   0,687,1843,#94B3FF
+#   1,240,1052,#6A5CFF
+#   2,602,1488,#94B3FF
 
 import yaml
 from datetime import datetime
@@ -29,12 +36,13 @@ def addSecondToDict(d, second):
 if __name__ == "__main__":
 
     secondToTxs = {}
+    # csv_values = []
+    translated_csv_values = {}
 
     with open("function-arguments.csv", "w") as csv_file:
         # we iterate over each of the 78 csv files:
-        # for fileId in range(0, 79):
-        # for fileId in range(1, 79):
-        for fileId in range(1, 2):
+        for fileId in range(1, 79):
+            # for fileId in range(1, 2):
             print("fileId: ", fileId)
             filename = "data/" + str(fileId) + ".csv"
             with open(filename, "r") as f:
@@ -58,28 +66,34 @@ if __name__ == "__main__":
                     #    year, month, day, hour, minute, second))
                     addSecondToDict(secondToTxs, currentSecond)
 
-                    # we also record which pixels where being placed by the user
-                    splitted = line.split(",")
-                    color = splitted[-3]
-                    coordinates = splitted[-2:]
-                    x = coordinates[0].replace('"', "")
-                    y = coordinates[1].replace('"', "").replace("\n", "")
-                    # print(int(x), int(y))
-                    # write x,y and color into a csv file
-                    csv_file.write(x + "," + y + "," + color + "\n")
+                    if currentSecond not in translated_csv_values:
+                        # we also record which pixels where being placed by the user
+                        splitted = line.split(",")
+                        color = splitted[-3]
+                        coordinates = splitted[-2:]
+                        x = coordinates[0].replace('"', "")
+                        y = coordinates[1].replace('"', "").replace("\n", "")
+                        # print(int(x), int(y))
+                        # write x,y and color into a csv file
+                        # csv_values.append(
+                        #    str(currentSecond) + "," + x + "," + y + "," + color
+                        # )
+                        translated_csv_values[currentSecond] = x + "," + y + "," + color
 
     # print(secondToTxs)
 
-    # we scala the keys by the first second (this we start at 0)
+    # we scale the keys by the first second (this we start at 0)
     start_second = min(secondToTxs.keys())
     final_dict = {}
+    final_values = {}
 
     for key in secondToTxs.keys():
         final_dict[key - start_second] = secondToTxs[key]
 
-    # print(final_dict)
-    # now we can write the yaml file
+    for key in translated_csv_values.keys():
+        final_values[key - start_second] = translated_csv_values[key]
 
+    # now we can write the yaml file
     dict_file = [
         {"id": "PixelWar"},
         {"contract": "pixelWar:setPixel"},
@@ -88,3 +102,8 @@ if __name__ == "__main__":
 
     with open(r"res.yaml", "w") as file:
         documents = yaml.dump(dict_file, file)
+
+    # we also write the arguments for the contract call
+    with open("function-arguments.csv", "w") as csv_file:
+        for i in range(len(final_values)):
+            csv_file.write(str(i) + "," + final_values[i] + "\n")
