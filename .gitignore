@@ -11,7 +11,7 @@ artifacts
 
 # zipped files containing historic of all pixels transactions
 #pixelWarData/data
-pixelWarData/function-arguments.csv
+pixelWarData/arguments.csv
 
 NFTixData/data
 

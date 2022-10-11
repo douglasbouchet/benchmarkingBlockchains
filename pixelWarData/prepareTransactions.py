@@ -41,8 +41,8 @@ if __name__ == "__main__":
 
     with open("function-arguments.csv", "w") as csv_file:
         # we iterate over each of the 78 csv files:
-        for fileId in range(1, 79):
-            # for fileId in range(1, 2):
+        # for fileId in range(1, 79):
+        for fileId in range(1, 2):
             print("fileId: ", fileId)
             filename = "data/" + str(fileId) + ".csv"
             with open(filename, "r") as f:
@@ -90,8 +90,12 @@ if __name__ == "__main__":
     for key in secondToTxs.keys():
         final_dict[key - start_second] = secondToTxs[key]
 
+with open("arguments.csv", "w") as csv_file:
     for key in translated_csv_values.keys():
-        final_values[key - start_second] = translated_csv_values[key]
+        # final_values[key - start_second] = translated_csv_values[key]
+        csv_file.write(
+            str(key - start_second) + "," + translated_csv_values[key] + "\n"
+        )
 
     # now we can write the yaml file
     dict_file = [
@@ -102,8 +106,3 @@ if __name__ == "__main__":
 
     with open(r"res.yaml", "w") as file:
         documents = yaml.dump(dict_file, file)
-
-    # we also write the arguments for the contract call
-    with open("function-arguments.csv", "w") as csv_file:
-        for i in range(len(final_values)):
-            csv_file.write(str(i) + "," + final_values[i] + "\n")
