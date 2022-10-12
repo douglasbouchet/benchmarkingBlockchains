@@ -8,9 +8,9 @@ def main():
     # workloadPath = "pixelWarData/test.yaml"
     workloadPath = "./pixelWarData/res.yaml"
     samples = [
-        [i for i in range(50000, 50100)],
-        [i for i in range(203330, 203430)],
-        [i for i in range(291790, 291890)],
+        [i for i in range(50000, 50300)],
+        [i for i in range(203330, 203630)],
+        [i for i in range(291790, 292090)],
     ]  # select here the samples you want to use
     # print(samples)
     workload = {}

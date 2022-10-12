@@ -14,8 +14,12 @@ artifacts
 # zipped files containing historic of all pixels transactions
 #pixelWarData/data
 pixelWarData/arguments.csv
+pixelWarData/res.yaml
 
 NFTixData/data
+
+# file produced by output of diablo
+dataProcessing/inputCreateTxsChart/txs.txt
 
 
 # some generated Data
